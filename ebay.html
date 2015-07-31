@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Homework8</title>
+		<!-- Latest compiled and minified CSS -->
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+		<link rel="stylesheet" href="ebay.css">
+		<!-- jQuery library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+		<!-- Latest compiled JavaScript -->
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+		<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.13.1/jquery.validate.js"></script>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<script type="text/javascript" src="bootstrapPaginationJqueryPlugin.js"></script>		
+		<script type="text/javascript" src="ebay.js"></script>
+	</head>
+	<body>
+		<script>
+		window.fbAsyncInit = function() {
+		FB.init({
+		  appId      : '546134705508220',
+		  xfbml      : true,
+		  version    : 'v2.3'
+		});
+		};
+
+		(function(d, s, id){
+		 var js, fjs = d.getElementsByTagName(s)[0];
+		 if (d.getElementById(id)) {return;}
+		 js = d.createElement(s); js.id = id;
+		 js.src = "//connect.facebook.net/en_US/sdk.js";
+		 fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
+
+		function OnFbClick(link, caption, picture, description,name){
+			FB.ui({
+				method: 'feed',
+				link: link,
+				caption: caption,
+				picture: picture,
+				description: description,
+				name: name,
+			}, function(response) {
+
+				if (response) {
+					if (!response.error_code)
+						alert("Posted Successfully");
+					else
+						alert("Unable to Post");
+					
+				}
+			});   
+		}
+		</script>	
+		<div class="heading">
+			<img src="http://cs-server.usc.edu:45678/hw/hw6/ebay.jpg" width="200px"/>
+			<span>Shopping</span>
+		</div>
+		<form  id=myForm class="container-fluid form-horizontal" onsubmit="return ajaxSubmit()" >
+			<div class="form-group">
+				<label for=Keywords class="col-md-2">Key Words:</label>
+				<div class="col-md-10"><input type=text name=Keywords class="form-control" title="Please enter text for Key Words" placeholder="Please enter text" ></div>
+			</div>
+			<div class="form-group">
+				<label class="col-md-2">Price Range:</label>
+				<div class="col-md-5">
+					<input id=minPrice name=minPrice type=text class="form-control"  placeholder="from $">
+				</div>
+				<div class="col-md-5">
+					<input id=maxPrice name=maxPrice type=text class="form-control"  placeholder="to $">
+				</div>    
+			</div>
+			<div class="form-group">	
+				<label class="col-md-2">Condition:</label>
+				<div class="col-md-10">
+					<span class="checkbox-inline-block"><input class="" name=condition[]  value="1000" type=checkbox >New</span>
+					<span class="checkbox-inline-block"><input class="" name=condition[]  value="3000" type=checkbox>Used</span>
+					<span class="checkbox-inline-block"><input class="" name=condition[]  value="4000" type=checkbox >Very Good</span>
+					<span class="checkbox-inline-block"><input class="" name=condition[]  value="5000" type=checkbox>Good</span>
+					<span class="checkbox-inline-block"><input class="" name=condition[]  value="6000" type=checkbox>Acceptable</span>
+				</div>	
+			</div>	
+			<div class="form-group">	
+				<label class="col-md-2">Buying formats</label>
+				<div class="col-md-10">
+					<span class="checkbox-inline-block"><input class="" name=ListingType[] value="FixedPrice" type=checkbox>Buy It Now</span>
+					<span class="checkbox-inline-block"><input class="" name=ListingType[]  value="Auction" type=checkbox>Auction</span>
+					<span class="checkbox-inline-block"><input class="" name=ListingType[]  value="Classified" type=checkbox>Classified Ads</span>
+				</div>	
+			</div>	
+			<div class="form-group">	
+				<label class="col-md-2">Seller</label>
+				<div class="col-md-2" >
+					<span class="checkbox-inline-block"><input class="" name=ReturnsAcceptedOnly  value=true type=checkbox>Return accepted</span>
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-md-2">Shipping</label>
+				<div class="col-md-10">
+					<span class="checkbox-inline-block"><input class="" name=FreeShippingOnly  value=true type=checkbox>Free  Shipping</span>
+					<span class="checkbox-inline-block"><input class="" name=ExpeditedShippingType  value=Expedited type=checkbox>Expedited shipping available</span>
+					<span class=""><input name=MaxHandlingTime type=number class="form-control" placeholder="Max handling time (days)"></span>
+				</div>	
+				
+			</div>
+			<div class="form-group">
+				<label class="col-md-2">Sort by</label>
+				<div class="col-md-10">
+					<select class="form-control" name=sortOrder>
+							<option  value="BestMatch">Best Match</option>
+							<option  value="CurrentPriceHighest">Price: highest first</option>
+							<option  value="PricePlusShippingHighest">Price + Shipping: highest first</option>
+							<option  value="PricePlusShippingLowest">Price + Shipping: lowest first</option>
+					</select>
+				</div>	
+			</div>
+			<div class="form-group">
+				<label class="col-md-2">Results Per Page</label>
+				<div class="col-md-10">
+					<select class="form-control" name=entriesPerPage>
+						<option value=5  > 5</option>
+						<option value=10 >10</option>
+						<option value=15 >15</option>
+						<option value=20 >20</option>
+					</select>
+				</div>	
+			</div>	
+			<div class="form-group">
+				<input type=reset class="btn btn-default col-md-offset-8 col-md-1" value=Clear onclick="onClear()"> <input class="btn btn-primary col-md-offset-1 col-md-1" value=Search type=submit >
+			</div>	
+			<input type="hidden" value=1 name=pageNumber >
+		</form>   
+		<div id=resultContainer>
+			
+		</div>
+		<div class=" container-fluid row">
+			<div id=pagination class="col-md-offset-4"></div>
+		</div>	
+	<noscript>
+	</body>
+</html>
